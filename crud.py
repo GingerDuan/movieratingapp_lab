@@ -12,6 +12,7 @@ def create_user(email, password):
     return user
 
 
+
 def create_movie(title, overview, release_date, poster_path):
     """Create and return a new movie."""
 
@@ -50,6 +51,11 @@ def get_user_by_id(user_id):
     """found a user by the user id"""
     
     return User.query.get(user_id)
+
+def get_user_by_email(email):
+    """Return a user by email"""
+
+    return User.query.filter(User.email == email).first()
 
 if __name__ == '__main__':
     from server import app
