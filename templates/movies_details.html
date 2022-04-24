@@ -9,31 +9,22 @@
   {{ movie.overview }}
 </p>
 
+
+{% if session.get('user_email') %}
 <h2>Rate this movie</h2>
-<form action="/rating" method="POST">
+<form action="/movies/{{ movie.movie_id }}" method='POST'>
   <p>
     Rating:
-    
-    <input type="radio" name="rating" value= 1
-         checked>
-    <label for=1>1</label>
-      <input type="radio" name="rating" value= 2
-          checked>
-    <label for=2>2</label>
-    <input type="radio" name="rating" value= 3
-         checked>
-    <label for=3>3</label>
-      <input type="radio" name="rating" value= 4
-          checked>
-    <label for=4>4</label>
-    <input type="radio" name="rating" value= 5
-         checked>
-    <label for=5>5</label>
-      
+    <select name="rating">
+      <option value="">Select rating</option>
+      {% for num in range(6) %}
+        <option value="{{ num }}">{{ num }}</option>
+      {% endfor %}
+    </select>
   </p>
   <p><input type="submit"></p>
-  
 </form>
+{% endif %}
 
 <img src="{{ movie.poster_path }}">
 {% endblock %}

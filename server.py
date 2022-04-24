@@ -37,6 +37,29 @@ def show_movie(movie_id):
 
     return render_template("movies_details.html", movie=movie)
 
+@app.route("/movies/<movie_id>", methods=['POST'])
+def rating(movie_id):
+    """a user rate a movie"""
+    
+    log_email = session.get("user_email")
+    score = request.form.get("rating")
+
+    if log_email is None:
+        flash("You must log in to rate this movie")
+    elif score is None:
+        flash("Please slecet a score of this movie")
+    else:
+        user = crud.get_user_by_email(log_email)
+        movie = crud.get_movie_by_id(movie_id)
+        rating = crud.create_rating(user, movie, int(score))
+
+        db.session.add(rating)
+        db.session.commit()
+
+        flash(f"You rated this movie {score} out of 5.")
+
+    return redirect(f"/movies/{movie_id}")     
+
 @app.route("/users")
 def all_users():
     """ view all users """
@@ -87,29 +110,7 @@ def show_user(user_id):
 
     return render_template("user_detail.html", user=user)
 
-@app.route("/movies/<movie_id>/rating",methods=['POST'])
-def rating(movie_id):
-    """a user rate a movie"""
-
-    score = request.form.get("rating")
-    email = session.get["user_email"]
-
-    if email is None:
-        flash("You must log in to rate this movie")
-    elif score is None:
-        flash("Please slecet a score of this movie")
-    else:
-        user = crud.get_user_by_email(email)
-        movie = crud.get_movie_by_id(movie_id)
-        rating = crud.create_rating(user, movie, int(score))
-
-        db.session.add(rating)
-        db.session.commit()
-
-        flash("rate successfully!!")
-
-    return redirect("/")
-        
+   
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)
